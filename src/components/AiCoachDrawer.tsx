@@ -1,8 +1,8 @@
-import { useState, useRef, useEffect } from 'react';
-import { X, ArrowRight, Loader2 } from 'lucide-react';
-import { useNutrition } from '../context/NutritionContext';
-import { chatWithCoach } from '../lib/gemini';
-import './AiCoachDrawer.css';
+import { useState, useRef, useEffect } from "react";
+import { X, ArrowRight, Loader2 } from "lucide-react";
+import { useNutrition } from "../context/NutritionContext";
+import { chatWithCoach } from "../lib/gemini";
+import "./AiCoachDrawer.css";
 
 interface AiCoachDrawerProps {
   isOpen: boolean;
@@ -10,14 +10,18 @@ interface AiCoachDrawerProps {
 }
 
 interface Message {
-  role: 'user' | 'model';
+  role: "user" | "model";
   content: string;
 }
 
 export default function AiCoachDrawer({ isOpen, onClose }: AiCoachDrawerProps) {
-  const [input, setInput] = useState('');
+  const [input, setInput] = useState("");
   const [messages, setMessages] = useState<Message[]>([
-    { role: 'model', content: "Hello! I'm your VitalPlate AI Coach. How can I help you optimize your nutrition today?" }
+    {
+      role: "model",
+      content:
+        "Hello! I'm your VitalPlate AI Coach. How can I help you optimize your nutrition today?",
+    },
   ]);
   const [isTyping, setIsTyping] = useState(false);
   const { user, meals } = useNutrition();
@@ -33,23 +37,30 @@ export default function AiCoachDrawer({ isOpen, onClose }: AiCoachDrawerProps) {
 
   const handleSend = async () => {
     if (!input.trim() || isTyping) return;
-    
+
     const userMessage = input.trim();
-    setInput('');
-    setMessages(prev => [...prev, { role: 'user', content: userMessage }]);
+    setInput("");
+    setMessages((prev) => [...prev, { role: "user", content: userMessage }]);
     setIsTyping(true);
 
     try {
-      // Convert local messages to ChatMessage format expected by gemini.ts
-      const history = messages.map(m => ({
+      // Convert local messages to the shared AI chat format
+      const history = messages.map((m) => ({
         role: m.role,
-        text: m.content
+        text: m.content,
       }));
-      
+
       const response = await chatWithCoach(history, userMessage, user, meals);
-      setMessages(prev => [...prev, { role: 'model', content: response }]);
+      setMessages((prev) => [...prev, { role: "model", content: response }]);
     } catch (error) {
-      setMessages(prev => [...prev, { role: 'model', content: "Sorry, I'm having trouble analyzing that request right now. Please try again later." }]);
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: "model",
+          content:
+            "Sorry, I'm having trouble analyzing that request right now. Please try again later.",
+        },
+      ]);
     } finally {
       setIsTyping(false);
     }
@@ -57,9 +68,11 @@ export default function AiCoachDrawer({ isOpen, onClose }: AiCoachDrawerProps) {
 
   return (
     <>
-      <div className={`drawer-backdrop ${isOpen ? 'open' : ''}`} onClick={onClose} />
-      <div className={`drawer ${isOpen ? 'open' : ''}`}>
-        
+      <div
+        className={`drawer-backdrop ${isOpen ? "open" : ""}`}
+        onClick={onClose}
+      />
+      <div className={`drawer ${isOpen ? "open" : ""}`}>
         <div className="drawer-header">
           <div className="drawer-title-group">
             <h2 className="title-sm">AI Health Coach</h2>
@@ -73,15 +86,30 @@ export default function AiCoachDrawer({ isOpen, onClose }: AiCoachDrawerProps) {
           </button>
         </div>
 
-        <div className="chat-history no-scrollbar" style={{ display: 'flex', flexDirection: 'column', gap: '16px', overflowY: 'auto', paddingBottom: '24px' }}>
+        <div
+          className="chat-history no-scrollbar"
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "16px",
+            overflowY: "auto",
+            paddingBottom: "24px",
+          }}
+        >
           {messages.map((msg, idx) => (
-            <div key={idx} className={`chat-bubble ${msg.role === 'user' ? 'user' : 'ai'}`}>
+            <div
+              key={idx}
+              className={`chat-bubble ${msg.role === "user" ? "user" : "ai"}`}
+            >
               <p>{msg.content}</p>
             </div>
           ))}
           {isTyping && (
-            <div className="chat-bubble ai" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <Loader2 size={16} className="spinner" /> 
+            <div
+              className="chat-bubble ai"
+              style={{ display: "flex", alignItems: "center", gap: "8px" }}
+            >
+              <Loader2 size={16} className="spinner" />
               <span>Thinking...</span>
             </div>
           )}
@@ -90,21 +118,21 @@ export default function AiCoachDrawer({ isOpen, onClose }: AiCoachDrawerProps) {
 
         <div className="drawer-footer">
           <div className="chat-input-wrapper">
-            <input 
-              type="text" 
-              className="chat-input" 
-              placeholder="Ask anything about your health..." 
+            <input
+              type="text"
+              className="chat-input"
+              placeholder="Ask anything about your health..."
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => {
-                if(e.key === 'Enter') {
-                   handleSend();
+                if (e.key === "Enter") {
+                  handleSend();
                 }
               }}
               disabled={isTyping}
             />
-            <button 
-              className="send-btn" 
+            <button
+              className="send-btn"
               onClick={handleSend}
               disabled={isTyping || !input.trim()}
             >
@@ -112,7 +140,6 @@ export default function AiCoachDrawer({ isOpen, onClose }: AiCoachDrawerProps) {
             </button>
           </div>
         </div>
-        
       </div>
     </>
   );
