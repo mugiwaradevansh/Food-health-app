@@ -1,0 +1,73 @@
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.section-header {
+  margin-bottom: -8px;
+}
+
+.title-lg {
+  font-size: 32px;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+  color: var(--text-primary);
+}
+
+.dashboard-grid {
+  display: grid;
+  gap: 24px;
+}
+
+.top-row {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.middle-row, .bottom-row {
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); /* 60/40 split approximation */
+}
+
+/* For streak dots */
+.streak-dots {
+  display: flex;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.streak-dots .dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.streak-dots .dot.green {
+  background-color: var(--accent-primary);
+}
+
+.streak-dots .dot.amber {
+  background-color: var(--accent-secondary);
+}
+
+.streak-dots .dot.empty {
+  background-color: transparent;
+  border: 1px solid var(--text-secondary);
+}
+
+@media (max-width: 1024px) {
+  .top-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .middle-row, .bottom-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .top-row {
+    grid-template-columns: 1fr;
+  }
+}

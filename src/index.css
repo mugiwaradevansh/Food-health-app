@@ -1,0 +1,147 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Georgia&display=swap');
+
+:root {
+  --bg-dark: #0F1A14;
+  --bg-card: #1A2B22;
+  --bg-ai-chat: #152018;
+  
+  --accent-primary: #27A06E;
+  --accent-main-ghost: rgba(39, 160, 110, 0.15);
+  --accent-border: rgba(39, 160, 110, 0.2);
+  
+  --accent-secondary: #FFB347;
+  --accent-warning: #FF7043;
+  
+  --text-primary: #F0EDE4;
+  --text-secondary: #7A9B88;
+  
+  --font-primary: 'DM Sans', sans-serif;
+  --font-hero: 'Georgia', serif;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-dark);
+  color: var(--text-primary);
+  font-family: var(--font-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* Base generic classes */
+.card {
+  background-color: var(--bg-card);
+  border-radius: 16px;
+  border: 1px solid var(--accent-border);
+  padding: 20px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+  transform: scale(1.01);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.title-sm {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.text-muted {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.gap-2 { gap: 8px; }
+.gap-3 { gap: 12px; }
+.gap-4 { gap: 16px; }
+.gap-6 { gap: 24px; }
+.gap-8 { gap: 32px; }
+
+/* Buttons */
+.btn {
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-primary);
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  transition: all 0.2s ease;
+}
+
+.btn-primary {
+  background-color: var(--accent-primary);
+  color: var(--bg-dark); 
+}
+
+.btn-primary:hover {
+  filter: brightness(1.1);
+}
+
+.btn-ghost {
+  background-color: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--accent-border);
+}
+
+.btn-ghost:hover {
+  background-color: var(--accent-main-ghost);
+}
+
+/* Utility to hide scrollbars */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+/* Glass effect for navbar/modals */
+.glass {
+  background: rgba(15, 26, 20, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Pulse animation for AI dot */
+@keyframes pulse-green {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(39, 160, 110, 0.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(39, 160, 110, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(39, 160, 110, 0); }
+}
+
+.animate-pulse-green {
+  animation: pulse-green 2s infinite;
+}

@@ -1,0 +1,126 @@
+.meal-list-card {
+  height: 100%;
+}
+
+.meal-list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.meal-list-header h3 {
+  margin: 0;
+}
+
+.btn-sm {
+  padding: 6px 14px;
+  font-size: 13px;
+  border-color: var(--accent-primary);
+  color: var(--accent-primary);
+}
+
+.mr-1 { margin-right: 4px; }
+
+.meals-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.meal-row {
+  display: flex;
+  position: relative;
+  padding: 16px 0;
+  transition: all 0.2s ease;
+  border-left: 2px solid transparent;
+  padding-left: 8px;
+  margin-left: -10px;
+}
+
+.meal-row:hover {
+  border-left-color: var(--accent-primary);
+  background-color: var(--bg-dark);
+  border-radius: 0 8px 8px 0;
+}
+
+.meal-icon-wrapper {
+  margin-right: 16px;
+  display: flex;
+  align-items: center;
+}
+
+.meal-icon {
+  width: 32px;
+  height: 32px;
+  background-color: var(--accent-main-ghost);
+  border-radius: 8px;
+}
+
+.meal-details {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--accent-border);
+}
+
+.meal-row:last-child .meal-details {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.meal-title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.meal-type {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.meal-time {
+  font-size: 12px;
+}
+
+.meal-description {
+  font-size: 13px;
+  color: var(--text-primary);
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.meal-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.macro-chips {
+  font-size: 11px;
+  color: var(--text-secondary);
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-family: monospace;
+}
+
+.score-badge {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--bg-dark);
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.score-badge.positive {
+  background-color: var(--accent-primary);
+}
+
+.score-badge.negative {
+  background-color: var(--accent-warning);
+  color: white;
+}

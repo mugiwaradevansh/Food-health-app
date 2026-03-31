@@ -1,0 +1,22 @@
+.app-layout {
+  display: flex;
+  min-height: 100vh;
+  width: 100vw;
+}
+
+.main-content {
+  flex-grow: 1;
+  margin-left: 64px; /* Sidebar width */
+  padding: 32px 48px;
+  overflow-y: auto;
+  height: 100vh;
+}
+
+@media (max-width: 768px) {
+  .main-content {
+    margin-left: 0;
+    margin-bottom: 64px; /* Bottom tab bar height */
+    padding: 24px 16px;
+    height: calc(100vh - 64px);
+  }
+}
