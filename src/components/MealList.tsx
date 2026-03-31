@@ -1,77 +1,64 @@
 import { Plus } from 'lucide-react';
+import { useOutletContext } from 'react-router-dom';
+import { useNutrition } from '../context/NutritionContext';
 import './MealList.css';
 
-interface Meal {
-  id: string;
-  type: string;
-  time: string;
-  description: string;
-  macros: string;
-  scoreImpact: number;
-}
-
 export default function MealList() {
-  const meals: Meal[] = [
-    {
-      id: '1',
-      type: 'Breakfast',
-      time: '7:30am',
-      description: 'Oats, Banana, Almonds',
-      macros: 'P:12g  C:58g  F:8g',
-      scoreImpact: 24,
-    },
-    {
-      id: '2',
-      type: 'Lunch',
-      time: '1:00pm',
-      description: 'Dal Rice, Curd, Salad',
-      macros: 'P:22g  C:74g  F:6g',
-      scoreImpact: 31,
-    },
-    {
-      id: '3',
-      type: 'Snack',
-      time: '4:00pm',
-      description: 'Biscuits, Chai',
-      macros: 'P:3g  C:28g  F:9g',
-      scoreImpact: -8,
-    },
-  ];
+  const { meals } = useNutrition();
+  const { setIsMealLogOpen } = useOutletContext<any>();
+
+  // Filter for today's meals
+  const today = new Date().setHours(0, 0, 0, 0);
+  const todaysMeals = meals.filter(m => new Date(m.timestamp).setHours(0, 0, 0, 0) === today)
+                           .sort((a, b) => b.timestamp - a.timestamp); // newest first
 
   return (
     <div className="card meal-list-card">
       <div className="meal-list-header">
         <h3 className="title-sm">Today's Meals</h3>
-        <button className="btn btn-ghost btn-sm">
+        <button className="btn btn-ghost btn-sm" onClick={() => setIsMealLogOpen(true)}>
           <Plus size={14} className="mr-1" /> Log Meal
         </button>
       </div>
 
       <div className="meals-container">
-        {meals.map((meal, index) => (
-          <div key={meal.id} className="meal-row">
-            <div className="meal-icon-wrapper">
-              <div className="meal-icon"></div>
-            </div>
-            
-            <div className="meal-details">
-              <div className="meal-title-row">
-                <span className="meal-type">{meal.type}</span>
-                <span className="meal-time text-muted">{meal.time}</span>
+        {todaysMeals.length === 0 ? (
+          <div style={{ textAlign: 'center', padding: '24px 0', color: 'var(--text-secondary)' }}>
+            No meals logged today.
+          </div>
+        ) : todaysMeals.map((meal, index) => {
+          const hours = new Date(meal.timestamp).getHours();
+          const isMorning = hours < 11;
+          const isLunch = hours >= 11 && hours < 16;
+          const mealType = isMorning ? "Breakfast" : isLunch ? "Lunch" : "Dinner";
+
+          return (
+            <div key={meal.id} className="meal-row">
+              <div className="meal-icon-wrapper">
+                <div className="meal-icon"></div>
               </div>
-              <div className="meal-description">{meal.description}</div>
               
-              <div className="meal-meta">
-                <div className="macro-chips">{meal.macros}</div>
-                <div className={`score-badge ${meal.scoreImpact >= 0 ? 'positive' : 'negative'}`}>
-                  {meal.scoreImpact > 0 ? '+' : ''}{meal.scoreImpact} pts
+              <div className="meal-details">
+                <div className="meal-title-row">
+                  <span className="meal-type">{mealType}</span>
+                  <span className="meal-time text-muted">
+                    {new Date(meal.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                  </span>
+                </div>
+                <div className="meal-description">{meal.name}</div>
+                
+                <div className="meal-meta">
+                  <div className="macro-chips">P:{meal.protein}g  C:{meal.carbs}g  F:{meal.fat}g</div>
+                  <div className={`score-badge ${meal.vitalScoreImpact >= 0 ? 'positive' : 'negative'}`}>
+                    {meal.vitalScoreImpact > 0 ? '+' : ''}{meal.vitalScoreImpact} pts
+                  </div>
                 </div>
               </div>
+              
+              {index < todaysMeals.length - 1 && <div className="meal-divider" />}
             </div>
-            
-            {index < meals.length - 1 && <div className="meal-divider" />}
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

@@ -10,7 +10,7 @@ export default function LandingPage() {
       <nav className="landing-nav glass">
         <div className="nav-container">
           <div className="brand" onClick={() => navigate('/')}>VitalPlate</div>
-          <button className="btn btn-primary" onClick={() => navigate('/dashboard')}>Sign In</button>
+          <button className="btn btn-primary" onClick={() => navigate('/signin')}>Sign In</button>
         </div>
       </nav>
 
@@ -23,7 +23,7 @@ export default function LandingPage() {
               VitalPlate maps your meals to your energy, sleep, and focus — then tells you exactly what to change.
             </p>
             <div className="hero-actions">
-              <button className="btn btn-primary btn-lg" onClick={() => navigate('/dashboard')}>
+              <button className="btn btn-primary btn-lg" onClick={() => navigate('/signin')}>
                 Start Free <ArrowRight size={18} className="ml-2" />
               </button>
               <button className="btn btn-ghost btn-lg">See Demo</button>

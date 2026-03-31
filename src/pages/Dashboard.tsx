@@ -4,39 +4,42 @@ import NutrientRadar from '../components/NutrientRadar';
 import MealList from '../components/MealList';
 import AiInsightCard from '../components/AiInsightCard';
 import { ArrowUp } from 'lucide-react';
+import { useNutrition } from '../context/NutritionContext';
 import './Dashboard.css';
 
 export default function Dashboard() {
+  const { user, vitalScore, dailyCalories, hydration, streak } = useNutrition();
+
   return (
     <div className="dashboard">
       <div className="section-header">
-        <h1 className="title-lg">Good Morning, Alex</h1>
+        <h1 className="title-lg">Good Morning, {user?.name || 'User'}</h1>
         <p className="text-muted">Here's your nutritional intelligence for today.</p>
       </div>
 
       <div className="dashboard-grid top-row">
         <MetricCard 
           title="VitalScore Today" 
-          value={<span className="score-lg">78</span>} 
+          value={<span className="score-lg">{vitalScore}</span>} 
           subtitle="VitalScore"
-          footer={<span style={{ color: 'var(--accent-primary)', display: 'flex', alignItems: 'center', gap: '4px' }}><ArrowUp size={14} /> +6 pts from yesterday</span>} 
+          footer={<span style={{ color: 'var(--accent-primary)', display: 'flex', alignItems: 'center', gap: '4px' }}><ArrowUp size={14} /> Based on your meal history</span>} 
         />
         <MetricCard 
           title="Calories" 
-          value="1,840" 
-          subtitle="of 2,200 kcal goal" 
-          progress={84} 
+          value={dailyCalories.toLocaleString()} 
+          subtitle={`of ${user?.goalCalories.toLocaleString() || 2200} kcal goal`} 
+          progress={Math.min(100, Math.round((dailyCalories / (user?.goalCalories || 2200)) * 100))} 
         />
         <MetricCard 
           title="Hydration" 
-          value="1.8L" 
-          subtitle="of 2.5L goal" 
-          progress={72} 
+          value={`${hydration}L`} 
+          subtitle={`of ${user?.goalHydration || 2.5}L goal`} 
+          progress={Math.min(100, Math.round((hydration / (user?.goalHydration || 2.5)) * 100))} 
           progressColor="#38Bdf8"
         />
         <MetricCard 
           title="Streak" 
-          value={<span style={{ color: 'var(--accent-secondary)' }}>12</span>} 
+          value={<span style={{ color: 'var(--accent-secondary)' }}>{streak}</span>} 
           subtitle="day streak"
           footer={
             <div className="streak-dots">

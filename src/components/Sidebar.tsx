@@ -10,9 +10,9 @@ interface SidebarProps {
 export default function Sidebar({ onOpenAiCoach, onOpenMealLog }: SidebarProps) {
   const navItems = [
     { icon: LayoutGrid, path: '/dashboard', label: 'Dashboard', id: 'dashboard' },
-    { icon: UtensilsCrossed, action: onOpenMealLog, label: 'Meal Log', id: 'meals' },
+    { icon: UtensilsCrossed, action: onOpenMealLog, label: 'Log Meal', id: 'log' },
+    { icon: Calendar, path: '/dashboard/meals', label: 'History', id: 'history' },
     { icon: BarChart2, path: '/dashboard/analytics', label: 'Analytics', id: 'analytics' },
-    { icon: Calendar, path: '/dashboard/plan', label: 'Meal Plan', id: 'plan' },
     { icon: MessageSquare, action: onOpenAiCoach, label: 'AI Coach', id: 'coach' },
   ];
 

@@ -1,5 +1,7 @@
-import { useState } from 'react';
-import { X, ArrowRight } from 'lucide-react';
+import { useState, useRef, useEffect } from 'react';
+import { X, ArrowRight, Loader2 } from 'lucide-react';
+import { useNutrition } from '../context/NutritionContext';
+import { chatWithCoach } from '../lib/gemini';
 import './AiCoachDrawer.css';
 
 interface AiCoachDrawerProps {
@@ -7,8 +9,51 @@ interface AiCoachDrawerProps {
   onClose: () => void;
 }
 
+interface Message {
+  role: 'user' | 'model';
+  content: string;
+}
+
 export default function AiCoachDrawer({ isOpen, onClose }: AiCoachDrawerProps) {
   const [input, setInput] = useState('');
+  const [messages, setMessages] = useState<Message[]>([
+    { role: 'model', content: "Hello! I'm your VitalPlate AI Coach. How can I help you optimize your nutrition today?" }
+  ]);
+  const [isTyping, setIsTyping] = useState(false);
+  const { user, meals } = useNutrition();
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages, isTyping]);
+
+  const handleSend = async () => {
+    if (!input.trim() || isTyping) return;
+    
+    const userMessage = input.trim();
+    setInput('');
+    setMessages(prev => [...prev, { role: 'user', content: userMessage }]);
+    setIsTyping(true);
+
+    try {
+      // Convert local messages to ChatMessage format expected by gemini.ts
+      const history = messages.map(m => ({
+        role: m.role,
+        text: m.content
+      }));
+      
+      const response = await chatWithCoach(history, userMessage, user, meals);
+      setMessages(prev => [...prev, { role: 'model', content: response }]);
+    } catch (error) {
+      setMessages(prev => [...prev, { role: 'model', content: "Sorry, I'm having trouble analyzing that request right now. Please try again later." }]);
+    } finally {
+      setIsTyping(false);
+    }
+  };
 
   return (
     <>
@@ -28,14 +73,19 @@ export default function AiCoachDrawer({ isOpen, onClose }: AiCoachDrawerProps) {
           </button>
         </div>
 
-        <div className="chat-history no-scrollbar">
-          <div className="chat-bubble user">
-            <p>Why do I feel tired after lunch?</p>
-          </div>
-          
-          <div className="chat-bubble ai">
-            <p>Based on your meal logs, your post-lunch tiredness likely correlates with your high-GI carb intake at lunch — white rice + roti together spike blood sugar, then cause a crash. Try adding more protein or swapping one carb for a protein source.</p>
-          </div>
+        <div className="chat-history no-scrollbar" style={{ display: 'flex', flexDirection: 'column', gap: '16px', overflowY: 'auto', paddingBottom: '24px' }}>
+          {messages.map((msg, idx) => (
+            <div key={idx} className={`chat-bubble ${msg.role === 'user' ? 'user' : 'ai'}`}>
+              <p>{msg.content}</p>
+            </div>
+          ))}
+          {isTyping && (
+            <div className="chat-bubble ai" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <Loader2 size={16} className="spinner" /> 
+              <span>Thinking...</span>
+            </div>
+          )}
+          <div ref={messagesEndRef} />
         </div>
 
         <div className="drawer-footer">
@@ -48,14 +98,15 @@ export default function AiCoachDrawer({ isOpen, onClose }: AiCoachDrawerProps) {
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => {
                 if(e.key === 'Enter') {
-                   // mock send
-                   setInput('');
+                   handleSend();
                 }
               }}
+              disabled={isTyping}
             />
             <button 
               className="send-btn" 
-              onClick={() => setInput('')}
+              onClick={handleSend}
+              disabled={isTyping || !input.trim()}
             >
               <ArrowRight size={18} color="var(--bg-dark)" />
             </button>
